@@ -1,0 +1,36 @@
+version: "3.1"
+
+services:
+
+  db:
+    image: postgres:13.2-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    container_name: db_postgres
+
+  frontend:
+    image: frontend
+    ports: 
+      - 5000:5000
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8080/
+    command: ["serve", "-s", "-l", "5000", "build"]
+
+  backend:
+    image: backend
+    ports: 
+      - 8080:8080
+    environment:
+      - REDIS_HOST=Redis
+      - REQUEST_ORIGIN=http://localhost:5000
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_PASSWORD=postgres
+    command: ["./server"]
+    depends_on:
+      - db
+  
+  redis:
+    image: redis
