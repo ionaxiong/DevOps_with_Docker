@@ -1,0 +1,37 @@
+version: "3.1"
+
+services:
+
+  ml-frontend:
+    image: machine-learning-frontend
+    ports:
+      - 3000:3000
+    networks:
+      - stack-network
+
+  ml-backend:
+    image: machine-learning-backend
+    ports:
+      - 5000:5000
+    networks:
+      - stack-network
+    volumes:
+      - model:/src/model
+    depends_on:
+      - ml-training
+  
+  ml-training:
+    image: ml-training
+    volumes:
+      - model:/src/model
+      - data:/src/data
+      - imgs:/src/imgs
+
+volumes:
+  model:
+  data:
+  imgs:
+
+networks:
+  stack-network:
+    name: stack-network
