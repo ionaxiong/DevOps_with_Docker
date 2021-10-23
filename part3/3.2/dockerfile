@@ -1,0 +1,10 @@
+# example usage: docker run -v /var/run/docker.sock:/var/run/docker.sock buildserver https://github.com/dockersamples/linux_tweet_app linux_tweet_app
+FROM ubuntu:latest
+
+WORKDIR /usr/src/app
+
+COPY ./workflow.sh . 
+
+RUN apt-get update && apt-get install docker.io -y 
+
+ENTRYPOINT ["/usr/src/app/workflow.sh"]
